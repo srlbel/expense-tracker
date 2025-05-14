@@ -23,7 +23,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(db_pool.clone())
+            .app_data(actix_web::web::Data::new(db_pool.clone()))
             .configure(interfaces::http::configure)
             .wrap(Logger::default())
     })

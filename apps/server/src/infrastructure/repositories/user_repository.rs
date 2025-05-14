@@ -18,15 +18,14 @@ impl PostgresUserRepository {
 #[async_trait]
 impl UserRepository for PostgresUserRepository {
     async fn find_by_id(&self, id: Uuid) -> Result<Option<User>, anyhow::Error> {
-        let user = sqlx::query_as!(
-            User,
+        let user = sqlx::query_as::<_, User>(
             r#"
             SELECT id, username, email, created_at, updated_at
             FROM users
             WHERE id = $1
             "#,
-            id
         )
+        .bind(id)
         .fetch_optional(&self.pool)
         .await?;
 
@@ -34,13 +33,12 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn find_all(&self) -> Result<Vec<User>, anyhow::Error> {
-        let users = sqlx::query_as!(
-            User,
+        let users = sqlx::query_as::<_, User>(
             r#"
             SELECT id, username, email, created_at, updated_at
             FROM users
             ORDER BY created_at DESC
-            "#
+            "#,
         )
         .fetch_all(&self.pool)
         .await?;
@@ -49,19 +47,18 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn create(&self, user: User) -> Result<User, anyhow::Error> {
-        let created_user = sqlx::query_as!(
-            User,
+        let created_user = sqlx::query_as::<_, User>(
             r#"
             INSERT INTO users (id, username, email, created_at, updated_at)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING id, username, email, created_at, updated_at
             "#,
-            user.id,
-            user.username,
-            user.email,
-            user.created_at,
-            user.updated_at
         )
+        .bind(user.id)
+        .bind(user.username.clone())
+        .bind(user.email.clone())
+        .bind(user.created_at)
+        .bind(user.updated_at)
         .fetch_one(&self.pool)
         .await?;
 
@@ -69,13 +66,13 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn delete(&self, id: Uuid) -> Result<bool, anyhow::Error> {
-        let result = sqlx::query!(
+        let result = sqlx::query(
             r#"
             DELETE FROM users
             WHERE id = $1
             "#,
-            id
         )
+        .bind(id)
         .execute(&self.pool)
         .await?;
 

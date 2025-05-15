@@ -2,14 +2,17 @@ pub mod dtos;
 pub mod handlers;
 
 use actix_files::{Files, NamedFile};
-use actix_web::{HttpRequest, HttpResponse, Result, web};
+use actix_web::{HttpRequest, HttpResponse, Result, http::StatusCode, web};
 
 async fn not_found(req: HttpRequest) -> Result<HttpResponse> {
     let file = NamedFile::open("./apps/client/dist/404.html")?;
-    Ok(file
+
+    let response = file
         .use_last_modified(true)
-        .set_status_code(actix_web::http::StatusCode::NOT_FOUND) // TODO: Search a form to use a non deprecated function
-        .into_response(&req))
+        .into_response(&req)
+        .map_into_boxed_body();
+
+    Ok(HttpResponse::build(StatusCode::NOT_FOUND).body(response.into_body()))
 }
 
 pub fn configure(cfg: &mut web::ServiceConfig) {

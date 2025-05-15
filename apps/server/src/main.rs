@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{App, HttpServer, middleware::Logger};
 use config::Config;
 use dotenv::dotenv;
@@ -22,10 +23,15 @@ async fn main() -> std::io::Result<()> {
     info!("Starting server at http://{}:{}", config.host, config.port);
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:4321")
+            .max_age(3600);
+
         App::new()
             .app_data(actix_web::web::Data::new(db_pool.clone()))
             .configure(interfaces::http::configure)
             .wrap(Logger::default())
+            .wrap(cors)
     })
     .bind((config.host, config.port))?
     .run()

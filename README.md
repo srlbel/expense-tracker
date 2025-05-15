@@ -7,6 +7,7 @@ This project aims to be a _sort of_ a monorepo for a fullstack app
 
 # Tech Stack
 - Actix Web
+- Actix Files
 - SQLx
 - PostgreSQL
 - Astro

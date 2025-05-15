@@ -2,7 +2,7 @@
 
 This project aims to be a _sort of_ a monorepo for a fullstack app
 
-> ![IMPORTANT]
+> [!IMPORTANT]
 > This is still a work in progress.
 
 # Tech Stack

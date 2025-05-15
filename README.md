@@ -39,6 +39,7 @@ tba
 
 # Roadmap
 - Set up a proper dev server with proxy and cors
+- [x] Set up a monorepo with turbo
 - Hot reloading the backend
 - Set up authentication via session cookies
 - Set up docker for easy deploy

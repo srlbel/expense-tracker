@@ -6,13 +6,11 @@ This project aims to be a _sort of_ a monorepo for a fullstack app
 > This is still a work in progress.
 
 # Tech Stack
-## Backend
 - Actix Web
 - SQLx
 - PostgreSQL
-
-## Frontend
 - Astro
+- Turborepo
 
 # Set up
 1. Write your `.env` file, make sure to set up `DATABASE_URL` parameter.
